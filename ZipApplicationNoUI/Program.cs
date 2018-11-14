@@ -16,11 +16,11 @@ namespace ZipApplicationNoUI
         [STAThread]
         static void Main(string[] args)
         {
-            InitializeComponent();
-            SelectFileDialog();
-            SelectFolderDialog();
-            Zip();
-            Console.ReadLine();
+            InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
+            SelectFileDialog();         //Zip圧縮するファイル選択ダイアログメソッド
+            SelectFolderDialog();       //生成したZipファイルの保存先選択ダイアログメソッド
+            Zip();                      //Zip化するメソッド
+            Console.ReadLine();         //コンソール画面を残す
         }
 
         //
@@ -62,7 +62,7 @@ namespace ZipApplicationNoUI
                     foreach (string i in openFileDialog.FileNames)
                     {
                         filePath.Add(i);
-                        Console.WriteLine(filePath);
+                        Console.WriteLine(i);
                     }
 
                     //    //Get the path of specified file
@@ -93,12 +93,13 @@ namespace ZipApplicationNoUI
             {
                 Title = "ZIPファイル名を入力して、保存先を指定し、「OK」を押してください。",
                 InitialDirectory = Path.GetDirectoryName(sourceDirectory),
+                Filter = "ZIPファイル(*.zip)|*.zip"
             };
 
             //if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                saveFilePath = saveFileDialog.FileName; 
+                saveFilePath = saveFileDialog.FileName;
                 Console.WriteLine("\r\nZIPファイル名：\r\n" + Path.GetFileName(saveFileDialog.FileName) + ".zip\r\n");
                 Console.WriteLine("保存先：\r\n" + saveFileDialog.FileName);
             }
