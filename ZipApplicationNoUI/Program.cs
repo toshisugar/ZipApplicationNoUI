@@ -19,12 +19,13 @@ namespace ZipApplicationNoUI
             InitializeComponent();
             SelectFileDialog();
             SelectFolderDialog();
-            zip();
+            Zip();
+            Console.ReadLine();
         }
 
         //
         static string directoryPath;
-        static string files;
+        static List<string> filePath = new List<string>();
         static string saveFilePath;
 
         //前回見ていたパスを記憶するメソッド
@@ -58,9 +59,10 @@ namespace ZipApplicationNoUI
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     Console.WriteLine("選択ファイルパス：");
-                    foreach (string files in openFileDialog.FileNames)
+                    foreach (string i in openFileDialog.FileNames)
                     {
-                        Console.WriteLine(files);
+                        filePath.Add(i);
+                        Console.WriteLine(filePath);
                     }
 
                     //    //Get the path of specified file
@@ -103,17 +105,18 @@ namespace ZipApplicationNoUI
         }
 
         //Zip圧縮メソッド
-        private static void zip()
+        private static void Zip()
         {
             string password = System.Web.Security.Membership.GeneratePassword(8, 0);                //パスワード自動生成
 
             var zip = ZipFile.Create(saveFilePath);
+
             zip.BeginUpdate();
             zip.Password = password;                                                                //自動生成したパスワードをZipファイルに設定
 
-            foreach (var filePath in files)
+            foreach (var i in filePath)
             {
-                Add(zip, @"filePath");
+                Add(zip, i);
             }
             zip.CommitUpdate();
         }
