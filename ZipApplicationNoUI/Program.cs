@@ -15,13 +15,13 @@ namespace ZipApplicationNoUI
         {
             //InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
 
-            SelectFileDialog();
+            if (!SelectFileDialog()) return;
 
             //メイン処理に戻ったとき(ファイルが選択されたとき、選択せずに閉じられたとき)、filePathに値が入っていなければ、アプリを終了する。
             if (filePath.Count == 0)
             {
                 MessageBox.Show("アプリケーションを終了します。");
-                Environment.Exit(0);
+                return;
             }
 
             SelectFolderDialog();         //生成したZipファイルの保存先選択ダイアログメソッド
@@ -30,7 +30,7 @@ namespace ZipApplicationNoUI
             if (saveFilePath == null)
             {
                 MessageBox.Show("アプリケーションを終了します。");
-                Environment.Exit(0);
+                return;
             }
 
             Zip();                       //Zip化するメソッド
@@ -41,7 +41,7 @@ namespace ZipApplicationNoUI
         }
 
         static string directoryPath;
-        static List<string> filePath = new List<string>();
+        static List<string> filePath;
         static string saveFilePath;
         static string textFileName;
         static string password;
@@ -61,43 +61,43 @@ namespace ZipApplicationNoUI
         }
 
         //ファイル選択ダイアログ生成メソッド
-        private static void SelectFileDialog()
+        private static bool SelectFileDialog()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var retry = true;
+            while (retry)
             {
-                openFileDialog.InitialDirectory = directoryPath;
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.Title = "ZIP化したいファイルを選択し、「OK」を押してください(複数可)。";
-                openFileDialog.Multiselect = true;
+                retry = false;
 
-                //ファイルダイアログのOKボタンが押されたときの処理
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
+                    openFileDialog.InitialDirectory = directoryPath;
+                    openFileDialog.RestoreDirectory = true;
+                    openFileDialog.Title = "ZIP化したいファイルを選択し、「OK」を押してください(複数可)。";
+                    openFileDialog.Multiselect = true;
+
+                    //ファイルダイアログのOKボタンが押されなかったときの処理
+                    if (openFileDialog.ShowDialog() != DialogResult.OK) return false;
+
                     Console.WriteLine("選択ファイルパス：");
+
+                    filePath = new List<string>();
                     foreach (string i in openFileDialog.FileNames)
                     {
                         filePath.Add(i);
                         Console.WriteLine(i);
-                    }
-                }
 
-                //filePathの中身を確認して、0KBのものがあれば初期化する
-                foreach (var item in filePath)
-                {
-                    //ファイル情報を取得する(Lengthはファイルサイズ)
-                    FileInfo fileInfo = new FileInfo(item);
-                    if (fileInfo.Length == 0)                           //ファイルサイズが0KBのものがあれば、リストを初期化する
-                    {
-                        filePath = new List<string>();
-                        //リストに要素がなければ、0KBファイルを選択している警告を出す
-                        if (filePath.Count == 0)
+                        var fileInfo = new FileInfo(i);
+                        if (fileInfo.Length == 0)
                         {
-                            MessageBox.Show("０KBのファイルが選択されています。ファイルを選択しなおしてください。");
-                            SelectFileDialog();
+                            MessageBox.Show("\"" + i + "\"\r\nこのファイルは０KBです。全ファイルを選択しなおしてください。");
+                            retry = true;
+                            break;
                         }
                     }
                 }
             }
+
+            return true;
         }
 
         //ファイル名入力及び保存先フォルダ選択ダイアログ生成メソッド
