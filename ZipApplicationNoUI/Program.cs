@@ -135,8 +135,8 @@ namespace ZipApplicationNoUI
         {
             var zipFileName = Path.GetFileName(textFileName);
             //第1引数：ファイルパス　第2引数：追記するテキスト
-            File.WriteAllText(textFileName + ".txt", "添付ファイル名：" + zipFileName + "\r\n" + "パスワード：" + password);
-            Process.Start(textFileName + ".txt");
+            File.WriteAllText(textFileName.Replace(".zip", "") + ".txt", "添付ファイル名：" + zipFileName + "\r\n" + "パスワード：" + password);
+            Process.Start(textFileName.Replace(".zip", "") + ".txt");
         }
     }
 }
