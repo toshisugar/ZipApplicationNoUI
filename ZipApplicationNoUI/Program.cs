@@ -1,14 +1,10 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 using System.Windows.Forms;
 using ZipApplicationNoUI.Properties;
-using System.Diagnostics;
 
 namespace ZipApplicationNoUI
 {
@@ -18,11 +14,11 @@ namespace ZipApplicationNoUI
         static void Main(string[] args)
         {
             //InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
-            SelectFileDialog();         //Zip圧縮するファイル選択ダイアログメソッド
-            SelectFolderDialog();       //生成したZipファイルの保存先選択ダイアログメソッド
-            Zip();                      //Zip化するメソッド
+            SelectFileDialog();           //Zip圧縮するファイル選択ダイアログメソッド
+            SelectFolderDialog();       　//生成したZipファイルの保存先選択ダイアログメソッド
+            Zip();                     　 //Zip化するメソッド
             CreateText();
-            //Console.ReadLine();         //処理が終了してもコンソール画面を残す
+            //Console.ReadLine();         //コンソールを出している場合、処理が終了してもコンソール画面を残すメソッド
         }
 
         //
@@ -68,23 +64,6 @@ namespace ZipApplicationNoUI
                         filePath.Add(i);
                         Console.WriteLine(i);
                     }
-
-                    //    //Get the path of specified file
-                    //    filePath = directoryPath = openFileDialog.InitialDirectory;
-                    //    Settings.Default.SourcePath = directoryPath = openFileDialog.FileName;
-                    //    Settings.Default.Save();
-
-                    //    //Read the contents of the file into a stream
-                    //    var fileStream = openFileDialog.OpenFile();
-
-                    //    using (StreamReader reader = new StreamReader(fileStream))
-                    //    {
-                    //        fileContent = reader.ReadToEnd();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    //★★★キャンセルや×ボタンが押されたときの処理★★★
                 }
             }
         }
@@ -116,15 +95,13 @@ namespace ZipApplicationNoUI
             password = System.Web.Security.Membership.GeneratePassword(8, 0);                //パスワード自動生成
 
             var zip = ZipFile.Create(saveFilePath);
-
+            zip.Password = password;                                //自動生成したパスワードをZipファイルに設定
             zip.BeginUpdate();
-                                                                //自動生成したパスワードをZipファイルに設定
 
             foreach (var i in filePath)
             {
                 Add(zip, i);
             }
-            zip.Password = password;
             zip.CommitUpdate();
 
             Console.WriteLine("パスワード：\r\n" + password);
@@ -140,13 +117,10 @@ namespace ZipApplicationNoUI
         //ファイル名とパスワードをメモ帳に入力するメソッド
         private static void CreateText()
         {
-            //第1引数：ファイルパス
-            //第2引数：追記するテキスト 
             var zipFileName = Path.GetFileName(textFileName);
+            //第1引数：ファイルパス　第2引数：追記するテキスト
             File.WriteAllText(textFileName + ".txt", "添付ファイル名：" + zipFileName + "\r\n" + "パスワード：" + password);
             Process.Start(textFileName + ".txt");
         }
-
-        //ファイル名とパスワードが入力されたメモ帳を開くメソッド
     }
 }
