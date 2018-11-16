@@ -14,14 +14,17 @@ namespace ZipApplicationNoUI
         static void Main(string[] args)
         {
             //InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
-            SelectFileDialog();           //Zip圧縮するファイル選択ダイアログメソッド
-            SelectFolderDialog();       　//生成したZipファイルの保存先選択ダイアログメソッド
+            SelectFileDialog();
+            while (filePath.Count == 0)   //filePathの中身がなければ繰り返す
+            {
+                SelectFileDialog();       //Zip圧縮するファイル選択ダイアログメソッド     
+            }
+            SelectFolderDialog();         //生成したZipファイルの保存先選択ダイアログメソッド
             Zip();                     　 //Zip化するメソッド
             CreateText();
             //Console.ReadLine();         //コンソールを出している場合、処理が終了してもコンソール画面を残すメソッド
         }
 
-        //
         static string directoryPath;
         static List<string> filePath = new List<string>();
         static string saveFilePath;
@@ -45,9 +48,6 @@ namespace ZipApplicationNoUI
         //ファイル選択ダイアログ生成メソッド
         private static void SelectFileDialog()
         {
-            //var fileContent = string.Empty;
-            //var filePath = string.Empty;
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
             {
                 openFileDialog.InitialDirectory = directoryPath;
@@ -63,6 +63,22 @@ namespace ZipApplicationNoUI
                     {
                         filePath.Add(i);
                         Console.WriteLine(i);
+                    }
+                }
+
+                //filePathの中身を確認して、0KBのものがあれば初期化する
+                foreach (var item in filePath)
+                {
+                    //ファイル情報を取得する(Lengthはファイルサイズ)
+                    FileInfo fileInfo = new FileInfo(item);
+                    if (fileInfo.Length == 0)                           //ファイルサイズが0KBのものがあれば、リストを初期化する
+                    {
+                        filePath = new List<string>();
+                        //リストに要素がなければ、0KBファイルを選択している警告を出す
+                        if (filePath.Count == 0)
+                        {
+                            MessageBox.Show("０KBのファイルが選択されています。ファイルを選択しなおしてください。");
+                        }
                     }
                 }
             }
