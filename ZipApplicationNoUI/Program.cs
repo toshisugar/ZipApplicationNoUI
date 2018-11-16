@@ -14,14 +14,29 @@ namespace ZipApplicationNoUI
         static void Main(string[] args)
         {
             //InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
+
             SelectFileDialog();
-            while (filePath.Count == 0)   //filePathの中身がなければ繰り返す
+
+            //メイン処理に戻ったとき(ファイルが選択されたとき、選択せずに閉じられたとき)、filePathに値が入っていなければ、アプリを終了する。
+            if (filePath.Count == 0)
             {
-                SelectFileDialog();       //Zip圧縮するファイル選択ダイアログメソッド     
+                MessageBox.Show("アプリケーションを終了します");
+                Environment.Exit(0);
             }
+
             SelectFolderDialog();         //生成したZipファイルの保存先選択ダイアログメソッド
-            Zip();                     　 //Zip化するメソッド
+
+            //メイン処理に戻ったとき(フォルダが選択されたとき、選択せずに閉じられたとき)、saveFilePathに値が入っていなければ、アプリを終了する。
+            if (saveFilePath == null)
+            {
+                MessageBox.Show("アプリケーションを終了します");
+                Environment.Exit(0);
+            }
+
+            Zip();                       //Zip化するメソッド
+
             CreateText();
+            
             //Console.ReadLine();         //コンソールを出している場合、処理が終了してもコンソール画面を残すメソッド
         }
 
@@ -78,6 +93,7 @@ namespace ZipApplicationNoUI
                         if (filePath.Count == 0)
                         {
                             MessageBox.Show("０KBのファイルが選択されています。ファイルを選択しなおしてください。");
+                            SelectFileDialog();
                         }
                     }
                 }
