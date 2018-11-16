@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using ZipApplicationNoUI.Properties;
 
@@ -85,14 +86,13 @@ namespace ZipApplicationNoUI
                     {
                         filePath.Add(i);
                         Console.WriteLine(i);
+                    }
 
-                        var fileInfo = new FileInfo(i);
-                        if (fileInfo.Length == 0)
-                        {
-                            MessageBox.Show("\"" + i + "\"\r\nこのファイルは０KBです。全ファイルを選択しなおしてください。");
-                            retry = true;
-                            break;
-                        }
+                    var zeroFiles = filePath.Select(t => new FileInfo(t)).Where(t => t.Length == 0).ToList();
+                    if (zeroFiles.Count != 0)
+                    {
+                        MessageBox.Show(string.Join("\r\n", zeroFiles.Select(t => "\"" + t.FullName + "\"")) + "\r\n上記のファイルは０KBです。全ファイルを選択しなおしてください。");
+                        retry = true;
                     }
                 }
             }
