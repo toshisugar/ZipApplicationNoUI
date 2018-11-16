@@ -20,7 +20,7 @@ namespace ZipApplicationNoUI
             //メイン処理に戻ったとき(ファイルが選択されたとき、選択せずに閉じられたとき)、filePathに値が入っていなければ、アプリを終了する。
             if (filePath.Count == 0)
             {
-                MessageBox.Show("アプリケーションを終了します");
+                MessageBox.Show("アプリケーションを終了します。");
                 Environment.Exit(0);
             }
 
@@ -29,14 +29,14 @@ namespace ZipApplicationNoUI
             //メイン処理に戻ったとき(フォルダが選択されたとき、選択せずに閉じられたとき)、saveFilePathに値が入っていなければ、アプリを終了する。
             if (saveFilePath == null)
             {
-                MessageBox.Show("アプリケーションを終了します");
+                MessageBox.Show("アプリケーションを終了します。");
                 Environment.Exit(0);
             }
 
             Zip();                       //Zip化するメソッド
 
             CreateText();
-            
+
             //Console.ReadLine();         //コンソールを出している場合、処理が終了してもコンソール画面を残すメソッド
         }
 
