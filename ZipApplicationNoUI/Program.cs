@@ -71,7 +71,7 @@ namespace ZipApplicationNoUI
                 {
                     openFileDialog.InitialDirectory = directoryPath;
                     openFileDialog.RestoreDirectory = true;
-                    openFileDialog.Title = "ZIP化したいファイルを選択し、「OK」を押してください(複数可)。";
+                    openFileDialog.Title = "ZIP化したいファイルを選択し、「開く(O)」ボタンを押してください(複数可)。";
                     openFileDialog.Multiselect = true;
 
                     //ファイルダイアログのOKボタンが押されなかったときの処理
@@ -104,7 +104,7 @@ namespace ZipApplicationNoUI
             string sourceDirectory = directoryPath;                        //圧縮するファイルが入っているフォルダのパスをsouceDirectoryに格納
             var saveFileDialog = new SaveFileDialog            //圧縮したファイルを保存するフォルダを指定するダイアログボックスの生成
             {
-                Title = "ZIPファイル名を入力して、保存先を指定し、「OK」を押してください。",
+                Title = "ZIPファイル名を入力して、保存先を指定し、「保存(S)」を押してください。",
                 InitialDirectory = Path.GetDirectoryName(sourceDirectory),
                 Filter = "ZIPファイル(*.zip)|*.zip"
             };
