@@ -16,10 +16,8 @@ namespace ZipApplicationNoUI
         {
             //InitializeComponent();      //ファイアログボックスで前回選択したディレクトリを記憶するメソッド
 
-            if (!SelectFileDialog()) return;
-
-            //メイン処理に戻ったとき(ファイルが選択されたとき、選択せずに閉じられたとき)、filePathに値が入っていなければ、アプリを終了する。
-            if (filePath.Count == 0)
+            //SelectFileDialogがfalse(ダイアログでキャンセル、×、Escが押されていたら)return(メイン処理から抜ける)する
+            if (!SelectFileDialog())
             {
                 MessageBox.Show("アプリケーションを終了します。");
                 return;
